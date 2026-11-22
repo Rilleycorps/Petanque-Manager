@@ -1,0 +1,13 @@
+{
+  "notes": "Nouvelle version de Pétanque Manager.",
+  "android": {
+    "code": 2,
+    "nom": "1.1",
+    "url": "https://github.com/Rilleycorps/petanque-manager/releases/download/v1.1/PetanqueManager.apk"
+  },
+  "windows": {
+    "code": 2,
+    "nom": "1.1",
+    "url": "https://github.com/Rilleycorps/petanque-manager/releases/download/v1.1/PetanqueManager-windows.zip"
+  }
+}
