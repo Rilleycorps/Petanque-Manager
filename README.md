@@ -90,8 +90,5 @@ Comment mettre à jour la version Windows ? Téléchargez le nouveau zip et remp
 Android : Kotlin, Jetpack Compose (Material 3).
 Windows : Kotlin, Compose Multiplatform Desktop.
 Moteur de concours commun aux deux versions (poules, tableaux, mêlée), sauvegarde en JSON, PDF.
-📬 Contact
-
-Une question, une idée, un problème ? Ouvrez une issue ou écrivez à VOTRE-EMAIL@exemple.fr.
 
 Pétanque Manager n'est affilié à aucune fédération. Fait avec ❤️ pour les organisateurs de concours de pétanque.
