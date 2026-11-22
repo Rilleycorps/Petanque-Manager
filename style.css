@@ -101,3 +101,14 @@ footer a{color:var(--doux)}
 .texte h2{font-size:1.3rem;margin:30px 0 8px;color:var(--or)}
 .texte p,.texte li{color:#cfe0d4}
 .texte ul{padding-left:22px;margin-top:8px}
+
+/* galerie de captures */
+.galerie{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.vue{display:block;text-decoration:none;color:var(--doux);background:var(--carte);border:1px solid var(--bord);border-radius:18px;overflow:hidden;transition:transform .15s,border-color .15s}
+.vue:hover{transform:translateY(-3px);border-color:var(--vert)}
+.vue img{display:block;width:100%;height:auto;aspect-ratio:652/764;object-fit:cover;object-position:top}
+.vue span{display:block;padding:12px 14px;font-size:.9rem;line-height:1.4}
+@media(max-width:640px){
+  .galerie{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin:0 -20px;padding:0 20px 8px}
+  .vue{flex:0 0 78%;scroll-snap-align:center}
+}
