@@ -118,13 +118,13 @@
       <p>Des écrans simples, lisibles et pensés pour le bord du terrain. Touchez une image pour l'agrandir.</p>
     </div>
     <div class="galerie">
-      <a class="vue" href="captures/01-accueil.jpg" target="_blank" rel="noopener"><img src="captures/01-accueil.jpg" alt="Accueil : créer un concours, calculateur et concours rangés par catégories" loading="lazy" width="652" height="764"><span>Accueil : créer un concours, calculateur et concours rangés par catégories</span></a>
-      <a class="vue" href="captures/02-tableau-general.jpg" target="_blank" rel="noopener"><img src="captures/02-tableau-general.jpg" alt="Tableau Général, des huitièmes à la finale" loading="lazy" width="652" height="764"><span>Tableau Général, des huitièmes à la finale</span></a>
-      <a class="vue" href="captures/04-poules-qualifications.jpg" target="_blank" rel="noopener"><img src="captures/04-poules-qualifications.jpg" alt="Poules : chaque équipe qualifiée pour le Général ou la Consolante" loading="lazy" width="652" height="764"><span>Poules : chaque équipe qualifiée pour le Général ou la Consolante</span></a>
-      <a class="vue" href="captures/03-recapitulatif-championnat.jpg" target="_blank" rel="noopener"><img src="captures/03-recapitulatif-championnat.jpg" alt="Récapitulatif d'un championnat terminé" loading="lazy" width="652" height="764"><span>Récapitulatif d'un championnat terminé</span></a>
-      <a class="vue" href="captures/06-melee-doublettes.jpg" target="_blank" rel="noopener"><img src="captures/06-melee-doublettes.jpg" alt="Mêlée en doublettes avec classement provisoire" loading="lazy" width="652" height="764"><span>Mêlée en doublettes avec classement provisoire</span></a>
-      <a class="vue" href="captures/08-podium-tete-a-tete.jpg" target="_blank" rel="noopener"><img src="captures/08-podium-tete-a-tete.jpg" alt="Podium d'un concours en tête-à-tête" loading="lazy" width="652" height="764"><span>Podium d'un concours en tête-à-tête</span></a>
-      <a class="vue" href="captures/07-calculateur-recompenses.jpg" target="_blank" rel="noopener"><img src="captures/07-calculateur-recompenses.jpg" alt="Calculateur de récompenses" loading="lazy" width="652" height="764"><span>Calculateur de récompenses</span></a>
+      <a class="vue" data-vue href="captures/01-accueil.jpg" ><img src="captures/01-accueil.jpg" alt="Accueil : créer un concours, calculateur et concours rangés par catégories" loading="lazy" width="652" height="764"><span>Accueil : créer un concours, calculateur et concours rangés par catégories</span></a>
+      <a class="vue" data-vue href="captures/02-tableau-general.jpg" ><img src="captures/02-tableau-general.jpg" alt="Tableau Général, des huitièmes à la finale" loading="lazy" width="652" height="764"><span>Tableau Général, des huitièmes à la finale</span></a>
+      <a class="vue" data-vue href="captures/04-poules-qualifications.jpg" ><img src="captures/04-poules-qualifications.jpg" alt="Poules : chaque équipe qualifiée pour le Général ou la Consolante" loading="lazy" width="652" height="764"><span>Poules : chaque équipe qualifiée pour le Général ou la Consolante</span></a>
+      <a class="vue" data-vue href="captures/03-recapitulatif-championnat.jpg" ><img src="captures/03-recapitulatif-championnat.jpg" alt="Récapitulatif d'un championnat terminé" loading="lazy" width="652" height="764"><span>Récapitulatif d'un championnat terminé</span></a>
+      <a class="vue" data-vue href="captures/06-melee-doublettes.jpg" ><img src="captures/06-melee-doublettes.jpg" alt="Mêlée en doublettes avec classement provisoire" loading="lazy" width="652" height="764"><span>Mêlée en doublettes avec classement provisoire</span></a>
+      <a class="vue" data-vue href="captures/08-podium-tete-a-tete.jpg" ><img src="captures/08-podium-tete-a-tete.jpg" alt="Podium d'un concours en tête-à-tête" loading="lazy" width="652" height="764"><span>Podium d'un concours en tête-à-tête</span></a>
+      <a class="vue" data-vue href="captures/07-calculateur-recompenses.jpg" ><img src="captures/07-calculateur-recompenses.jpg" alt="Calculateur de récompenses" loading="lazy" width="652" height="764"><span>Calculateur de récompenses</span></a>
     </div>
   </div>
 </section>
@@ -167,5 +167,40 @@
   </div>
 </footer>
 
+
+<div id="lightbox" class="lb" role="dialog" aria-modal="true" aria-label="Capture agrandie" hidden>
+  <button class="lb-fermer" type="button" aria-label="Fermer">×</button>
+  <button class="lb-prec" type="button" aria-label="Capture précédente">‹</button>
+  <figure><img id="lb-img" alt=""><figcaption id="lb-leg"></figcaption></figure>
+  <button class="lb-suiv" type="button" aria-label="Capture suivante">›</button>
+</div>
+<script>
+(function(){
+  var liens=[].slice.call(document.querySelectorAll('[data-vue]'));
+  var lb=document.getElementById('lightbox'), img=document.getElementById('lb-img'), leg=document.getElementById('lb-leg');
+  var i=0, dernier=null;
+  function montrer(n){
+    i=(n+liens.length)%liens.length;
+    var a=liens[i], im=a.querySelector('img');
+    img.src=a.getAttribute('href'); img.alt=im.alt; leg.textContent=im.alt;
+  }
+  function ouvrir(n){ dernier=document.activeElement; montrer(n); lb.hidden=false; document.body.style.overflow='hidden'; lb.querySelector('.lb-fermer').focus(); }
+  function fermer(){ lb.hidden=true; document.body.style.overflow=''; if(dernier&&dernier.focus) dernier.focus(); }
+  liens.forEach(function(a,n){ a.addEventListener('click',function(e){ e.preventDefault(); ouvrir(n); }); });
+  lb.querySelector('.lb-fermer').addEventListener('click',fermer);
+  lb.querySelector('.lb-prec').addEventListener('click',function(e){ e.stopPropagation(); montrer(i-1); });
+  lb.querySelector('.lb-suiv').addEventListener('click',function(e){ e.stopPropagation(); montrer(i+1); });
+  lb.addEventListener('click',function(e){ if(e.target===lb) fermer(); });
+  document.addEventListener('keydown',function(e){
+    if(lb.hidden) return;
+    if(e.key==='Escape') fermer();
+    else if(e.key==='ArrowLeft') montrer(i-1);
+    else if(e.key==='ArrowRight') montrer(i+1);
+  });
+  var x0=null;
+  lb.addEventListener('touchstart',function(e){ x0=e.touches[0].clientX; },{passive:true});
+  lb.addEventListener('touchend',function(e){ if(x0===null) return; var d=e.changedTouches[0].clientX-x0; x0=null; if(Math.abs(d)>50) montrer(d<0?i+1:i-1); });
+})();
+</script>
 </body>
 </html>
