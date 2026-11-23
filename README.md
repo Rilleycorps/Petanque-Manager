@@ -69,7 +69,7 @@ Tirez au sort : un seul bouton crée les poules et prépare les tableaux.
 Saisissez les scores : la suite du concours se construit toute seule.
 💰 Gratuité et publicités
 
-L'application est gratuite. La version Android affiche un bandeau publicitaire (Google AdMob) ; un achat unique permet de le retirer. La version Windows n'a aucune publicité.
+L'application est gratuite.
 
 🔐 Confidentialité
 
