@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -25,6 +25,7 @@
       <a href="#apercu">Aperçu</a>
       <a href="#securite">Sécurité</a>
       <a href="#faq">Questions</a>
+      <a href="#idees">Vos idées</a>
       <a class="cta-nav" href="#telecharger">Télécharger</a>
     </nav>
   </div>
@@ -178,6 +179,36 @@
   </div>
 </section>
 
+<section id="idees">
+  <div class="wrap">
+    <div class="titre">
+      <h2>Une idée, une demande, un souci ?</h2>
+      <p>L'appli évolue grâce à vos retours. Dites-moi ce qui manque ou ce qui ne va pas.</p>
+    </div>
+    <form id="form-idees" class="form-idees" action="https://formspree.io/f/xvkavzzk" method="POST">
+      <label>Votre message concerne
+        <select name="type">
+          <option>Une idée ou une demande de fonction</option>
+          <option>Un commentaire ou un avis</option>
+          <option>Un problème ou un bug</option>
+          <option>Autre</option>
+        </select>
+      </label>
+      <label>Votre message
+        <textarea name="message" rows="5" required maxlength="3000" placeholder="Par exemple : j'aimerais pouvoir… / Chez nous, ça bloque quand…"></textarea>
+      </label>
+      <div class="deux">
+        <label>Votre prénom <small>(facultatif)</small><input type="text" name="nom" maxlength="60" autocomplete="given-name"></label>
+        <label>Votre e-mail <small>(facultatif, pour vous répondre)</small><input type="email" name="email" maxlength="120" autocomplete="email"></label>
+      </div>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+      <button class="btn btn-1" type="submit">Envoyer mon message</button>
+      <p id="form-etat" class="petit" role="status" aria-live="polite"></p>
+      <p class="petit">Votre message est transmis uniquement à l'auteur de l'appli, par le service Formspree. Voir la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+    </form>
+  </div>
+</section>
+
 <section id="telecharger">
   <div class="wrap">
     <div class="dl">
@@ -198,7 +229,7 @@
 <footer>
   <div class="wrap">
     <span>© Pétanque Manager</span>
-    <span><a href="confidentialite.html">Politique de confidentialité</a>
+    <span><a href="confidentialite.html">Politique de confidentialité</a> · <a href="mailto:VOTRE-EMAIL@exemple.fr">Contact</a></span>
   </div>
 </footer>
 
@@ -209,6 +240,21 @@
   <figure><img id="lb-img" alt=""><figcaption id="lb-leg"></figcaption></figure>
   <button class="lb-suiv" type="button" aria-label="Capture suivante">›</button>
 </div>
+<script>
+(function(){
+  var f=document.getElementById('form-idees'); if(!f) return;
+  var etat=document.getElementById('form-etat'), btn=f.querySelector('button');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    
+    btn.disabled=true; etat.textContent='Envoi en cours…';
+    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
+      .then(function(r){ if(r.ok){f.reset();etat.textContent='Merci ! Votre message a bien été envoyé.';} else {etat.textContent="L'envoi a échoué. Réessayez un peu plus tard.";} })
+      .catch(function(){etat.textContent="L'envoi a échoué. Vérifiez votre connexion et réessayez.";})
+      .then(function(){btn.disabled=false;});
+  });
+})();
+</script>
 <script>
 (function(){
   var liens=[].slice.call(document.querySelectorAll('[data-vue]'));
