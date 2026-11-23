@@ -125,3 +125,8 @@ footer a{color:var(--doux)}
 .lb-prec{left:16px;top:50%;transform:translateY(-50%)}
 .lb-suiv{right:16px;top:50%;transform:translateY(-50%)}
 @media(max-width:640px){.lb{padding:12px}.lb-prec,.lb-suiv{top:auto;bottom:16px;transform:none}.lb-prec{left:calc(50% - 56px)}.lb-suiv{right:calc(50% - 56px)}.lb figure{max-height:78vh}.lb img{max-height:68vh}}
+
+.aide-android{max-width:560px;margin:22px auto 0;padding:14px 18px;border:1px solid rgba(255,210,122,.4);background:rgba(255,210,122,.08);border-radius:14px;text-align:left;font-size:.92rem;color:var(--doux)}
+.aide-android strong{color:var(--or);display:block;margin-bottom:4px}
+.aide-android p{margin:0}
+.aide-android b{color:var(--texte)}
