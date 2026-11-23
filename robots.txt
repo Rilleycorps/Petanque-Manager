@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rilleycorps.github.io/Petanque-Manager/sitemap.xml
