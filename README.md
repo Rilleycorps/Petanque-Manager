@@ -4,7 +4,7 @@ L'application pour organiser vos concours de pétanque : tirage au sort, poules,
 
 Disponible gratuitement sur Android et Windows. Sans compte, sans inscription : vos données restent sur votre appareil.
 
-🌐 Site : https://rilleycorps.github.io/petanque-manager/
+🌐 Site : https://rilleycorps.github.io/Petanque-Manager/
 
 📥 Télécharger
 Plateforme	Fichier	Installation
