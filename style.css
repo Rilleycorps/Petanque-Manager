@@ -130,3 +130,12 @@ footer a{color:var(--doux)}
 .aide-android strong{color:var(--or);display:block;margin-bottom:4px}
 .aide-android p{margin:0}
 .aide-android b{color:var(--texte)}
+
+.secu{display:grid;grid-template-columns:230px 1fr;gap:36px;align-items:center;max-width:860px;margin:0 auto}
+.score{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:var(--carte);border:1px solid var(--bord);border-radius:20px;padding:22px 16px}
+.score strong{color:var(--vert);letter-spacing:.08em;text-transform:uppercase;font-size:.95rem}
+.score small{color:var(--doux);font-size:.78rem}
+.points{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.points li{color:var(--doux)}
+.points b{color:var(--texte)}
+@media(max-width:700px){.secu{grid-template-columns:1fr}}
