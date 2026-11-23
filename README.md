@@ -19,6 +19,16 @@ Disponible gratuitement sur **Android** et **Windows**. Sans compte, sans inscri
 
 ---
 
+## 🆕 Nouveautés de la version 1.3
+
+- **Deux nouveaux formats à trois tableaux** : le **Repêchage A/B/C** et la **Cascade A/B/C**. Le match suivant apparaît dès que deux équipes sont connues, sans attendre la fin du tour, et les tableaux se remplissent au fur et à mesure.
+- **Doublette formée et triplette formée** : des équipes déjà formées, comme en mêlée.
+- **Terrains numérotés** (option) : chaque match reçoit automatiquement le premier terrain libre. Les numéros apparaissent aussi dans le PDF des poules.
+- **Choix du format en menu déroulant** à la création d'un concours.
+- **Windows** : la mise à jour automatique ne laisse plus de fenêtre noire, et écrit un journal dans `%TEMP%\petanque-maj.log`.
+
+---
+
 ## 🏆 Les formats de concours
 
 ### Tête-à-tête
@@ -41,6 +51,21 @@ Un joueur contre un joueur. Tirage au sort automatique, saisie rapide des scores
 - Les places dans les tableaux sont tirées au hasard en évitant, autant que possible, que des équipes d'une même poule se rencontrent dès le premier tour.
 - Aucune limite fixe d'équipes : testé pour plus de 100 équipes (au minimum 3 équipes).
 
+### Repêchage A/B/C
+- **2 parties pour tout le monde** : tour 1 tiré au sort, puis les gagnants jouent entre eux et les perdants entre eux.
+- Selon les victoires : **2 victoires = tableau A**, **1 victoire = tableau B**, **aucune victoire = tableau C**.
+- Chaque tableau se joue ensuite en **élimination directe** et désigne son propre vainqueur.
+- 8 équipes minimum. Si un groupe est impair, une équipe joue contre un « blanc » (13-7 d'office).
+
+### Cascade A/B/C
+Inspirée du règlement du concours en cascade A B C de la Fédération suisse de pétanque.
+- Tours 1 et 2 comme ci-dessus ; **2-0 : tableau A**, en élimination directe.
+- **Les 1-1** jouent un tour 3 entre eux : les gagnants vont au **tableau B**, les perdants descendent au **C**.
+- **Les 0-2** jouent un tour 3 entre eux : les perdants sont éliminés, les gagnants vont au **C**.
+- 8 équipes minimum.
+
+> Dans ces deux formats, rien n'attend la fin d'un tour : dès que deux équipes sont connues pour le tour suivant, leur match est créé. Les tableaux A, B et C sont visibles dès le départ et se remplissent au fur et à mesure.
+
 ---
 
 ## ✨ Fonctionnalités
@@ -48,6 +73,7 @@ Un joueur contre un joueur. Tirage au sort automatique, saisie rapide des scores
 **Organisation**
 - 🎲 **Tirage équitable** : les poules sont tirées au hasard en évitant de réunir des équipes du même club.
 - 📺 **Affichage pour les joueurs** : un tableau des poules en plein écran qui montre qui joue contre qui, prêt pour un téléphone, une tablette ou un écran.
+- 🏟️ **Terrains numérotés** (option) : chaque match reçoit automatiquement le premier terrain libre, et attend si tous sont occupés. Activable à la création ou en cours de concours. Les numéros figurent aussi dans le PDF des poules.
 - 🔎 **Recherche d'équipe** toujours visible pour retrouver rapidement une équipe.
 - ➕ **Ajout d'équipes ou de joueurs en cours de saisie**, directement au bon endroit.
 
@@ -105,8 +131,8 @@ Non, elles sont indépendantes. Utilisez *Exporter* puis *Importer* pour passer 
 - Android : dans l'espace privé de l'application.
 - Windows : dans `%APPDATA%\Petanque` (un fichier par concours et par club).
 
-**Comment mettre à jour la version Windows ?**
-Téléchargez le nouveau zip et remplacez le dossier du programme. Vos concours, enregistrés ailleurs, sont conservés.
+**Comment mettre à jour l'application ?**
+Elle propose elle-même la nouvelle version au démarrage (Android et Windows). Sous Windows, vous pouvez aussi télécharger le nouveau zip et remplacer le dossier du programme : vos concours, enregistrés ailleurs, sont conservés.
 
 ---
 
@@ -116,11 +142,6 @@ Téléchargez le nouveau zip et remplacez le dossier du programme. Vos concours,
 - **Windows** : Kotlin, Compose Multiplatform Desktop.
 - Moteur de concours commun aux deux versions (poules, tableaux, mêlée), sauvegarde en JSON, PDF.
 
----
-
-## 📬 Contact
-
-Une question, une idée, un problème ? Ouvrez une [issue](https://github.com/Rilleycorps/petanque-manager/issues) ou écrivez à **VOTRE-EMAIL@exemple.fr**.
 
 ---
 
