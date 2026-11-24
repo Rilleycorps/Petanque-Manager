@@ -19,12 +19,17 @@ Disponible gratuitement sur **Android** et **Windows**. Sans compte, sans inscri
 
 ---
 
-## 🆕 Nouveautés de la version 1.3
+## 🆕 Nouveautés de la version 1.4
 
 - **Deux nouveaux formats à trois tableaux** : le **Repêchage A/B/C** et la **Cascade A/B/C**. Le match suivant apparaît dès que deux équipes sont connues, sans attendre la fin du tour, et les tableaux se remplissent au fur et à mesure.
-- **Doublette formée et triplette formée** : des équipes déjà formées, comme en mêlée.
+- **Suivi en direct pour les joueurs** : un QR code à afficher ; les joueurs le scannent et voient sur leur téléphone leur prochain match, leur terrain et les scores (recherche par numéro ou nom d'équipe). Fonctionne en Wi-Fi local, sans internet ni compte.
+- **Interface plus claire** : accueil allégé (un seul bouton « Nouveau concours », clubs repliés, concours « en cours » puis « terminés »), écran de concours avec une seule ligne d'outils (terrains, suivi en direct) et un menu ⋮ pour renommer ou supprimer, options de création repliées.
+- **Doublette formée et triplette formée** : des équipes déjà formées, comme en mêlée, avec l'option **gagnant contre gagnant** (après le 1er tour, chaque équipe rencontre une équipe qui a le même nombre de victoires, sans refaire le même adversaire si possible).
 - **Terrains numérotés** (option) : chaque match reçoit automatiquement le premier terrain libre. Les numéros apparaissent aussi dans le PDF des poules.
 - **Choix du format en menu déroulant** à la création d'un concours.
+- **Recherche d'équipe** aussi dans le Repêchage et la Cascade : ses matchs, son terrain et son tableau.
+- **Android** : le clavier ne cache plus la case où l'on écrit.
+- **Sauvegarde plus sûre** : les fichiers sont écrits de façon atomique (aucune perte en cas de coupure).
 - **Windows** : la mise à jour automatique ne laisse plus de fenêtre noire, et écrit un journal dans `%TEMP%\petanque-maj.log`.
 
 ---
@@ -42,6 +47,7 @@ Un joueur contre un joueur. Tirage au sort automatique, saisie rapide des scores
 ### Doublette formée et triplette formée
 - Les équipes sont déjà formées : chaque équipe garde ses joueurs pendant tout le concours.
 - À chaque partie, une équipe adverse est tirée au sort, sans refaire les mêmes adversaires.
+- Option **gagnant contre gagnant** : après le 1er tour, chaque équipe rencontre une équipe qui a le même nombre de victoires.
 - Classement par équipe, comme en mêlée.
 
 ### Championnat de France
@@ -118,7 +124,7 @@ L'application est **gratuite** et **sans aucune publicité**, sur Android comme 
 
 ## 🔐 Confidentialité
 
-Vos données (équipes, joueurs, clubs, résultats) restent sur votre appareil et ne sont jamais envoyées ailleurs. Détails : [politique de confidentialité](https://rilleycorps.github.io/petanque-manager/confidentialite.html).
+Vos données (équipes, joueurs, clubs, résultats) restent sur votre appareil et ne sont jamais envoyées sur internet. Le suivi en direct (facultatif) les diffuse uniquement sur votre réseau Wi-Fi local, tant que vous le laissez activé. Détails : [politique de confidentialité](https://rilleycorps.github.io/petanque-manager/confidentialite.html).
 
 ---
 
@@ -142,6 +148,11 @@ Elle propose elle-même la nouvelle version au démarrage (Android et Windows). 
 - **Windows** : Kotlin, Compose Multiplatform Desktop.
 - Moteur de concours commun aux deux versions (poules, tableaux, mêlée), sauvegarde en JSON, PDF.
 
+---
+
+## 📬 Contact
+
+Une question, une idée, un problème ? Ouvrez une [issue](https://github.com/Rilleycorps/petanque-manager/issues) ou écrivez à **petanquemanager@hotmail.com**.
 
 ---
 

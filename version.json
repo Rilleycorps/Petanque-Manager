@@ -1,13 +1,13 @@
 {
-  "notes": "Version sans publicité, plus légère. Tes concours sont conservés.",
+  "notes": "Version 1.4 : Repêchage et Cascade A/B/C, suivi en direct sur téléphone (QR code), gagnant contre gagnant, interface plus claire, recherche d'équipe partout.",
   "android": {
-    "code": 4,
-    "nom": "1.3",
-    "url": "https://github.com/Rilleycorps/Petanque-Manager/releases/latest/download/PetanqueManager.apk"
+    "code": 5,
+    "nom": "1.4",
+    "url": "https://github.com/Rilleycorps/petanque-manager/releases/download/v1.4/PetanqueManager.apk"
   },
   "windows": {
-    "code": 4,
-    "nom": "1.3",
-    "url": "https://github.com/Rilleycorps/Petanque-Manager/releases/latest/download/PetanqueManager-windows.zip"
+    "code": 5,
+    "nom": "1.4",
+    "url": "https://github.com/Rilleycorps/petanque-manager/releases/download/v1.4/PetanqueManager-windows.zip"
   }
 }
