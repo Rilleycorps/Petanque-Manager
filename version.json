@@ -1,13 +1,13 @@
 {
-  "notes": "Version 1.4 : Repêchage et Cascade A/B/C, suivi en direct sur téléphone (QR code), gagnant contre gagnant, interface plus claire, recherche d'équipe partout.",
+  "notes": "Version 1.5 (Windows) : affichage en 3 colonnes sur grand écran (accueil, matchs à jouer, tableaux et classement) et liste des matchs à jouer triée par terrain.",
   "android": {
     "code": 5,
     "nom": "1.4",
     "url": "https://github.com/Rilleycorps/petanque-manager/releases/latest/download/PetanqueManager.apk"
   },
   "windows": {
-    "code": 5,
-    "nom": "1.4",
+    "code": 6,
+    "nom": "1.5",
     "url": "https://github.com/Rilleycorps/petanque-manager/releases/latest/download/PetanqueManager-windows.zip"
   }
 }

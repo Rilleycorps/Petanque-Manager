@@ -20,7 +20,14 @@ Disponible gratuitement sur **Android** et **Windows**. Sans compte, sans inscri
 
 ---
 
-## 🆕 Nouveautés de la version 1.4
+## 🆕 Nouveautés de la version 1.5
+
+- **Windows : tout le concours sur un seul écran.** Sur un écran assez large, l'appli s'affiche en 3 colonnes : l'accueil et la création des concours à gauche, les poules et les matchs à jouer au milieu, les tableaux (Général, Consolante, A, B, C) ou le classement à droite. Une fenêtre plus étroite garde l'affichage habituel en une colonne.
+- **Liste « Matchs à jouer »** : tous les matchs en attente (poules, tours et tableaux mélangés) dans une seule liste triée par terrain ; un clic pour indiquer le gagnant, et les matchs suivants apparaissent aussitôt.
+- **Version web pour iPhone et iPad** ([ouvrir](https://rilleycorps.github.io/Petanque-Manager/app/)) : mêmes formats et mêmes règles, installable depuis Safari, fonctionne sans réseau ; les sauvegardes passent d'une appli à l'autre.
+- L'appli Android reste en version 1.4 (aucun changement).
+
+## Nouveautés de la version 1.4
 
 - **Deux nouveaux formats à trois tableaux** : le **Repêchage A/B/C** et la **Cascade A/B/C**. Le match suivant apparaît dès que deux équipes sont connues, sans attendre la fin du tour, et les tableaux se remplissent au fur et à mesure.
 - **Suivi en direct pour les joueurs** : un QR code à afficher ; les joueurs le scannent et voient sur leur téléphone leur prochain match, leur terrain et les scores (recherche par numéro ou nom d'équipe). Fonctionne en Wi-Fi local, sans internet ni compte.

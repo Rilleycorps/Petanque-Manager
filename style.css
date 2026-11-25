@@ -150,3 +150,8 @@ footer a{color:var(--doux)}
 .form-idees button:disabled{opacity:.6;cursor:wait}
 .form-idees .petit{margin:0}
 @media(max-width:600px){.form-idees .deux{grid-template-columns:1fr}.form-idees{padding:18px}}
+
+/* vidéo de présentation */
+.video-presentation{max-width:900px;margin:0 auto 44px;text-align:center}
+.video-presentation video{width:100%;height:auto;display:block;border-radius:18px;border:1px solid var(--bord);box-shadow:0 18px 50px rgba(0,0,0,.45);background:#0b120e}
+.video-presentation p{color:var(--doux);font-size:.92rem;margin-top:10px}
