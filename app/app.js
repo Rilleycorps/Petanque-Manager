@@ -27,27 +27,52 @@
 
   // ------------------------------------------------------------------ Stockage (dans le navigateur)
 
-  const PREF = "pm.c.", CLE_CLUBS = "pm.clubs";
-  let concours = {}; // id -> concours
+  const PREF = "pm.c.", CLE_CLUBS = "pm.clubs", CLE_INDEX = "pm.index";
+  // Les concours ne sont lus qu'à l'ouverture : l'accueil n'utilise qu'un petit index (nom, format, état…),
+  // ce qui garde un démarrage rapide même avec des dizaines de gros concours enregistrés.
+  let concours = {}; // id -> concours déjà lus
+  let index = {};    // id -> { id, nom, type, creeLe, clubId, etat }
   let clubs = [];
+  function resume(c) { return { id: c.id, nom: c.nom, type: c.type, creeLe: c.creeLe, clubId: c.clubId || null, etat: M.etat(c) }; }
+  function ecrireIndex() { try { localStorage.setItem(CLE_INDEX, JSON.stringify(index)); } catch (e) { /* l'index se reconstruit au démarrage */ } }
   function chargerTout() {
     concours = {};
+    let ancien = {};
+    try { ancien = JSON.parse(localStorage.getItem(CLE_INDEX) || "{}") || {}; } catch (e) { ancien = {}; }
+    index = {};
+    let change = false;
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (!k || k.indexOf(PREF) !== 0) continue;
-      try { const c = M.depuisJson(localStorage.getItem(k)); concours[c.id] = c; } catch (e) { console.warn("Concours illisible", k, e); }
+      const id = k.slice(PREF.length);
+      if (ancien[id] && ancien[id].id === id) { index[id] = ancien[id]; continue; }
+      try { const c = M.depuisJson(localStorage.getItem(k)); concours[c.id] = c; index[c.id] = resume(c); change = true; } catch (e) { console.warn("Concours illisible", k, e); }
     }
+    if (change || Object.keys(ancien).length !== Object.keys(index).length) ecrireIndex();
     try { clubs = JSON.parse(localStorage.getItem(CLE_CLUBS) || "[]"); } catch (e) { clubs = []; }
     clubs.sort((a, b) => a.nom.toLowerCase().localeCompare(b.nom.toLowerCase()));
+  }
+  /** Le concours complet (lu à la demande). */
+  function obtenir(id) {
+    if (!id) return null;
+    if (concours[id]) return concours[id];
+    if (!index[id]) return null;
+    try { const c = M.depuisJson(localStorage.getItem(PREF + id)); concours[id] = c; return c; } catch (e) { console.warn("Concours illisible", id, e); return null; }
   }
   function ecrire(cle, texte) {
     try { localStorage.setItem(cle, texte); return true; }
     catch (e) { toast("Mémoire du navigateur pleine : exporte une sauvegarde et supprime d'anciens concours."); return false; }
   }
-  function sauver(c) { concours[c.id] = c; return ecrire(PREF + c.id, M.versJson(c)); }
-  function supprimerStock(id) { delete concours[id]; localStorage.removeItem(PREF + id); }
+  function sauver(c) {
+    concours[c.id] = c;
+    const ok = ecrire(PREF + c.id, M.versJson(c));
+    if (ok) { index[c.id] = resume(c); ecrireIndex(); }
+    return ok;
+  }
+  function supprimerStock(id) { delete concours[id]; delete index[id]; localStorage.removeItem(PREF + id); ecrireIndex(); }
   function sauverClubs() { clubs.sort((a, b) => a.nom.toLowerCase().localeCompare(b.nom.toLowerCase())); ecrire(CLE_CLUBS, M.versJson(clubs)); }
-  function listeConcours() { return Object.values(concours).sort((a, b) => b.creeLe - a.creeLe); }
+  /** Résumés des concours, du plus récent au plus ancien. */
+  function listeConcours() { return Object.values(index).sort((a, b) => b.creeLe - a.creeLe); }
   function clubDe(id) { return clubs.find((c) => c.id === id) || null; }
 
   // Historique pour « Annuler » (en mémoire, 30 étapes par concours)
@@ -154,14 +179,18 @@
     registre = [];
     let html;
     try {
-      if (r.nom === "nouveau") html = vueCreation(r);
-      else if (r.nom === "c" && concours[r.id]) html = vueConcours(concours[r.id]);
+      if (enSafariIOS && !continuerDansSafari()) html = vueInstallation();
+      else if (r.nom === "nouveau") html = vueCreation(r);
+      else if (r.nom === "c" && obtenir(r.id)) html = vueConcours(obtenir(r.id));
       else if (r.nom === "club" && clubDe(r.id)) html = vueClub(clubDe(r.id));
       else if (r.nom === "nouveau-club") html = vueNouveauClub();
       else html = vueAccueil();
     } catch (e) {
       console.error(e);
       html = barre("Pétanque Manager", null, btnRetour) + '<main><div class="carte"><b>Un problème est survenu.</b><p class="aide">' + esc(e.message) + "</p></div></main>";
+    }
+    if (enSafariIOS && continuerDansSafari()) {
+      html = html.replace("<main>", '<main><button class="alerte-safari" data-a="voir-install">⚠️ ' + (autreNavigateurIOS ? "Dans le navigateur" : "Dans Safari") + ', tes concours peuvent être effacés après 7 jours sans visite. <u>Installer l\'appli</u></button>');
     }
     const app = $("#app");
     const memeVue = app.dataset.vue === location.hash;
@@ -175,7 +204,7 @@
   function apresRendu() { const f = apresRenduFns; apresRenduFns = []; f.forEach((x) => x()); }
   actions.retour = () => {
     const r = route();
-    if (r.nom === "c" && concours[r.id] && concours[r.id].clubId && clubDe(concours[r.id].clubId) && profondeur === 0) return location.replace("#/club/" + concours[r.id].clubId);
+    if (r.nom === "c" && obtenir(r.id) && obtenir(r.id).clubId && clubDe(obtenir(r.id).clubId) && profondeur === 0) return location.replace("#/club/" + obtenir(r.id).clubId);
     retour("#/");
   };
 
@@ -192,9 +221,33 @@
   ];
   const estIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const estInstallee = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const enSafariIOS = estIOS && !estInstallee;
+  const autreNavigateurIOS = /CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent);
+  function continuerDansSafari() { try { return sessionStorage.getItem("pm.safari") === "1"; } catch (e) { return true; } }
 
+  /** iPhone / iPad dans Safari : on invite à installer l'appli (blocage souple, on peut continuer quand même). */
+  function vueInstallation() {
+    const nb = listeConcours().length;
+    let h = '<main class="installation"><img class="grande-icone" src="icones/apple-touch-icon.png" alt="">';
+    h += "<h1>Installe Pétanque Manager</h1>";
+    h += '<p class="aide">Installée sur l\'écran d\'accueil, l\'appli s\'ouvre en plein écran, marche sans réseau, et tes concours sont conservés. Dans Safari, iOS peut les effacer après 7 jours sans visite.</p>';
+    if (autreNavigateurIOS) {
+      h += '<ol class="etapes"><li>Touche <b>Partager</b> <span class="sym">⬆︎</span> (dans la barre d\'adresse ou le menu)</li><li>Choisis <b>« Ajouter à l\'écran d\'accueil »</b></li><li>Ouvre l\'appli depuis sa nouvelle icône</li></ol>' +
+        '<p class="aide">Si l\'option n\'apparaît pas, ouvre cette page dans <b>Safari</b>.</p>';
+    } else {
+      h += '<ol class="etapes"><li>Touche <b>Partager</b> <span class="sym">⬆︎</span> en bas de Safari<br><small>(sur iPad : en haut à droite)</small></li><li>Fais défiler et choisis <b>« Sur l\'écran d\'accueil »</b></li><li>Touche <b>Ajouter</b>, puis ouvre l\'appli depuis sa nouvelle icône</li></ol>';
+    }
+    if (nb) {
+      h += '<div class="carte"><b>Tu as déjà ' + pluriel(nb, "concours", "concours") + ' ici.</b><p class="aide">Sur iPhone, l\'appli installée ne voit pas les données du navigateur. Exporte une sauvegarde maintenant, puis importe-la dans l\'appli installée (menu ⋯ → Sauvegarde).</p>' +
+        '<button class="btn tonal large" data-a="exporter-direct">💾 Exporter une sauvegarde</button></div>';
+    }
+    h += '<button class="btn texte large" data-a="continuer-safari">Continuer dans ' + (autreNavigateurIOS ? "le navigateur" : "Safari") + ' quand même</button>';
+    return h + "</main>";
+  }
+
+  /** Carte d'un concours à partir de son résumé (voir resume()). */
   function carteConcours(c) {
-    const e = M.etat(c), club = c.clubId ? clubDe(c.clubId) : null;
+    const e = c.etat, club = c.clubId ? clubDe(c.clubId) : null;
     return '<button class="carte" data-a="ouvrir" data-id="' + esc(c.id) + '"><div class="ligne1"><span class="t">' + esc(c.nom) + '</span><span class="puce ' +
       (e === "Terminé" ? "verte" : "orange") + '">' + esc(e) + '</span></div><div class="m">' + esc(M.TYPES[c.type].libelle) + " · " + dateFr(c.creeLe) +
       (club ? " · " + esc(club.nom) : "") + "</div></button>";
@@ -202,13 +255,9 @@
 
   function vueAccueil() {
     const tous = listeConcours();
-    const enCours = tous.filter((c) => !M.estTermine(c)), finis = tous.filter((c) => M.estTermine(c));
+    const enCours = tous.filter((c) => c.etat !== "Terminé"), finis = tous.filter((c) => c.etat === "Terminé");
     let h = barre("Pétanque Manager", null, '<img class="logo" src="icones/icone-192.png" alt="">', '<button class="icone" data-a="menu-accueil" aria-label="Menu">⋯</button>');
     h += "<main>";
-    let masque = false; try { masque = localStorage.getItem("pm.astuceIos") === "1"; } catch (e) { /* */ }
-    if (estIOS && !estInstallee && !masque) {
-      h += '<div class="bandeau"><div><b>Installer sur l\'iPhone :</b> touche <b>Partager</b> <span aria-hidden="true">⬆︎</span> dans Safari, puis <b>« Sur l\'écran d\'accueil »</b>. L\'appli s\'ouvrira en plein écran, même sans réseau.</div><button class="x" data-a="masquer-ios" aria-label="Fermer">✕</button></div>';
-    }
     h += '<section class="accueil-haut"><h2>Organiser un concours</h2><p>Tirage au sort, poules, tableaux, mêlée et classements, directement sur ton téléphone.</p>' +
       '<button class="btn" data-a="nouveau">＋ Nouveau concours</button></section>';
     const formatsHtml = '<details class="section"' + (tous.length ? "" : " open") + '><summary>Formats</summary><div class="formats">' + FORMATS.map((f) =>
@@ -232,7 +281,9 @@
     h += '<div class="pied-page">Pétanque Manager ' + VERSION + ' · version web<br>Tes concours restent sur cet appareil. <a href="#" data-a="sauvegarde">Sauvegarde</a> · <a href="../">Site</a></div>';
     return h + "</main>";
   }
-  actions["masquer-ios"] = () => { try { localStorage.setItem("pm.astuceIos", "1"); } catch (e) { /* */ } rendre(); };
+  actions["continuer-safari"] = () => { try { sessionStorage.setItem("pm.safari", "1"); } catch (e) { /* */ } rendre(); window.scrollTo(0, 0); };
+  actions["voir-install"] = () => { try { sessionStorage.removeItem("pm.safari"); } catch (e) { /* */ } rendre(); window.scrollTo(0, 0); };
+  actions["exporter-direct"] = () => exporter();
   actions.ouvrir = (el) => aller("#/c/" + encodeURIComponent(el.dataset.id));
   actions["ouvrir-club"] = (el) => aller("#/club/" + encodeURIComponent(el.dataset.id));
   actions["nouveau-club"] = () => aller("#/nouveau-club");
@@ -285,7 +336,7 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
   function exporter() {
-    const texte = '{"application":"Petanque Manager","version":1,"concours":[' + listeConcours().map(M.versJson).join(",") + '],"clubs":' + M.versJson(clubs) + "}";
+    const texte = '{"application":"Petanque Manager","version":1,"concours":[' + listeConcours().map((x) => localStorage.getItem(PREF + x.id)).filter(Boolean).join(",") + '],"clubs":' + M.versJson(clubs) + "}";
     const d = new Date();
     partagerFichier("petanque-sauvegarde-" + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") + ".json", texte);
   }
@@ -496,9 +547,9 @@
     else if (c.repechage) h += vueRepechage(c, c.repechage, v);
     return h + "</main>";
   }
-  actions.annuler = (el) => { const c = concours[el.dataset.id]; if (c) annuler(c); };
+  actions.annuler = (el) => { const c = obtenir(el.dataset.id); if (c) annuler(c); };
   actions["menu-concours"] = (el) => {
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     dialogue(null, '<div class="menu-liste">' +
       '<button data-a="c-renommer" data-id="' + esc(c.id) + '">✎ Renommer le concours</button>' +
       '<button data-a="c-terrains" data-id="' + esc(c.id) + '">🅿︎ Terrains' + (c.terrains ? " (" + c.terrains + ")" : " (désactivé)") + "</button>" +
@@ -507,7 +558,7 @@
       '<button class="rouge" data-a="c-supprimer" data-id="' + esc(c.id) + '">🗑 Supprimer le concours</button></div>', [{ texte: "Fermer", classe: "texte" }]);
   };
   actions["c-renommer"] = (el) => {
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     demanderTexte("Renommer le concours", c.nom, (n) => {
       n = n.trim();
       if (!n) { toast("Donne un nom au concours"); return false; }
@@ -515,7 +566,7 @@
     });
   };
   actions["c-terrains"] = (el) => {
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     dialogue("Terrains", "<p>Chaque match à jouer reçoit le premier terrain libre ; s'il n'y en a plus, il attend qu'un terrain se libère.</p>" +
       '<label class="champ"><span>Nombre de terrains (vide = désactivé)</span><input class="saisie" id="dlg-ter" inputmode="numeric" pattern="[0-9]*" value="' + esc(c.terrains || "") + '"></label>', [
       { texte: "Enregistrer", classe: "plein", action: () => {
@@ -527,12 +578,12 @@
     ]);
   };
   actions["c-exporter"] = (el) => {
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     partagerFichier(c.nom.replace(/[^\p{L}\p{N} _-]/gu, "").trim().replace(/\s+/g, "-") + ".json",
       '{"application":"Petanque Manager","version":1,"concours":[' + M.versJson(c) + '],"clubs":[]}');
   };
   actions["c-supprimer"] = (el) => {
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     confirmer("Supprimer « " + c.nom + " » ?", "Le concours sera effacé de cet appareil. Cette action est définitive.", "Supprimer", () => {
       supprimerStock(c.id);
       toast("Concours supprimé");
@@ -618,7 +669,7 @@
     }
     return h;
   }
-  actions["tour-suivant"] = (el) => { const c = concours[el.dataset.id]; agir(c, () => M.tourSuivant(c.melee)); window.scrollTo(0, 0); };
+  actions["tour-suivant"] = (el) => { const c = obtenir(el.dataset.id); agir(c, () => M.tourSuivant(c.melee)); window.scrollTo(0, 0); };
 
   // Match « qui a gagné ? » (championnat, repêchage, tableaux)
   function carteGagnant(c, ref, etiquette, surligne) {
@@ -691,7 +742,7 @@
   let minuteurRecherche = null;
   document.addEventListener("input", (ev) => {
     if (ev.target.id !== "recherche") return;
-    const c = concours[ev.target.dataset.id]; if (!c) return;
+    const c = obtenir(ev.target.dataset.id); if (!c) return;
     vueDe(c).recherche = ev.target.value;
     clearTimeout(minuteurRecherche);
     minuteurRecherche = setTimeout(() => {
@@ -720,7 +771,7 @@
     if (!v.onglet || !liste.some((o) => o[0] === v.onglet)) v.onglet = liste[0][0];
     return '<div class="onglets" role="tablist">' + liste.map((o) => '<button class="' + (o[0] === v.onglet ? "actif" : "") + '" data-a="onglet" data-id="' + esc(c.id) + '" data-v="' + o[0] + '">' + esc(o[1]) + "</button>").join("") + "</div>";
   }
-  actions.onglet = (el) => { vueDe(concours[el.dataset.id]).onglet = el.dataset.v; rendre(); window.scrollTo(0, 0); };
+  actions.onglet = (el) => { vueDe(obtenir(el.dataset.id)).onglet = el.dataset.v; rendre(); window.scrollTo(0, 0); };
 
   // --- Championnat
   function vueChampionnat(c, ch, v) {
@@ -842,13 +893,13 @@
     return l.find((e) => e.id === id);
   }
   actions.forfait = (el) => {
-    const c = concours[el.dataset.id], e = trouverEquipe(c, +el.dataset.e);
+    const c = obtenir(el.dataset.id), e = trouverEquipe(c, +el.dataset.e);
     confirmer("Forfait de n°" + e.id + " ?", nomEquipe(e) + " perdra d'office tous ses matchs à venir.", "Déclarer forfait", () => {
       agir(c, () => { if (c.championnat) M.champDeclarerForfait(c.championnat, e.id); else M.repDeclarerForfait(c.repechage, e.id); }, "n°" + e.id + " déclarée forfait");
     }, true);
   };
   actions["modif-equipe"] = (el) => {
-    const c = concours[el.dataset.id], e = trouverEquipe(c, +el.dataset.e);
+    const c = obtenir(el.dataset.id), e = trouverEquipe(c, +el.dataset.e);
     dialogue("Modifier l'équipe n°" + e.id,
       '<label class="champ"><span>Numéro (s\'il est déjà pris, les deux équipes échangent)</span><input class="saisie" id="me-num" inputmode="numeric" pattern="[0-9]*" value="' + e.id + '"></label>' +
       '<label class="champ"><span>Nom</span><input class="saisie" id="me-nom" value="' + esc(e.nom) + '"></label>' +
@@ -873,7 +924,7 @@
 
   actions["c-imprimer"] = (el) => {
     fermerDialogue();
-    const c = concours[el.dataset.id];
+    const c = obtenir(el.dataset.id);
     const club = c.clubId ? clubDe(c.clubId) : null;
     let h = "<h1>" + esc(c.nom) + '</h1><div class="meta">' + esc(M.TYPES[c.type].libelle) + " · " + dateFr(c.creeLe) + (club ? " · " + esc(club.nom) : "") + " · " + esc(M.etat(c)) + "</div>";
     const td = (x, g) => "<td" + (g ? ' class="g"' : "") + ">" + esc(x) + "</td>";
@@ -951,11 +1002,12 @@
 
   function vueClub(cl) {
     const tous = listeConcours().filter((c) => c.clubId === cl.id);
+    const complets = tous.filter((c) => c.etat === "Terminé" && !M.equipesFormees(c.type) && c.type !== "CHAMPIONNAT" && c.type !== "ELIMINATION_REPECHAGE" && c.type !== "CASCADE_ABC").map((c) => obtenir(c.id)).filter(Boolean);
     const pts = cl.pointsParticipation === undefined || cl.pointsParticipation === null ? 5 : cl.pointsParticipation;
     let h = barre(cl.nom, pluriel(cl.joueurs.length, "joueur") + " · " + pluriel(tous.length, "concours", "concours"), btnRetour,
       '<button class="icone" data-a="menu-club" data-id="' + esc(cl.id) + '" aria-label="Menu">⋯</button>') + "<main>";
     h += '<button class="btn plein large" data-a="nouveau" data-club="' + esc(cl.id) + '">＋ Nouveau concours du club</button>';
-    const cc = M.classementClub(cl, tous);
+    const cc = M.classementClub(cl, complets);
     h += '<h2>Classement général <span class="nb">· ' + pluriel(cc.concours.length, "concours terminé", "concours terminés") + "</span></h2>";
     if (!cc.stats.length) h += '<div class="vide">Le classement se remplit avec les concours terminés du club<br>(tête-à-tête et mêlée).</div>';
     else {
@@ -1026,5 +1078,5 @@
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
-  window.PM = { concours: () => concours, clubs: () => clubs }; // pour les tests
+  window.PM = { concours: () => { Object.keys(index).forEach(obtenir); return concours; }, index: () => index, clubs: () => clubs }; // pour les tests
 })();

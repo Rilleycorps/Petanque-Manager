@@ -1,7 +1,7 @@
 /* Pétanque Manager – fonctionnement hors connexion. Changer VERSION à chaque mise en ligne pour mettre l'appli à jour. */
-const VERSION = "pm-web-1.4.0";
+const VERSION = "pm-web-1.4.2";
 const FICHIERS = [
-  "./", "index.html", "app.css?v=1", "moteur.js?v=1", "app.js?v=1", "manifest.webmanifest",
+  "./", "index.html", "app.css?v=2", "moteur.js?v=1", "app.js?v=3", "manifest.webmanifest",
   "icones/icone-192.png", "icones/icone-512.png", "icones/icone-maskable-512.png", "icones/apple-touch-icon.png", "icones/favicon.png"
 ];
 self.addEventListener("install", (e) => {

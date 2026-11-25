@@ -224,3 +224,16 @@ table.classement tr.p1 td:first-child{color:#c9a000}
   #impression th{background:#e8efe9}
   #impression .g{font-weight:700}
 }
+
+/* Invitation à installer (iPhone / iPad dans Safari) */
+.installation{text-align:center;padding-top:calc(40px + env(safe-area-inset-top))}
+.installation .grande-icone{width:96px;height:96px;border-radius:22px;box-shadow:0 8px 24px rgba(0,0,0,.18);margin-bottom:18px}
+.installation h1{font-size:1.5rem;margin-bottom:10px}
+.installation .aide{max-width:30em;margin:0 auto 16px}
+.etapes{list-style:none;counter-reset:e;text-align:left;max-width:26em;margin:8px auto 20px;display:flex;flex-direction:column;gap:10px}
+.etapes li{counter-increment:e;background:var(--surface);border-radius:14px;box-shadow:var(--ombre);padding:14px 14px 14px 56px;position:relative;font-size:1rem}
+.etapes li:before{content:counter(e);position:absolute;left:14px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:50%;background:var(--primaire);color:var(--sur-primaire);font-weight:800;display:flex;align-items:center;justify-content:center}
+.etapes small{color:var(--doux)}
+.etapes .sym{display:inline-block;background:var(--surface2);border-radius:6px;padding:0 6px}
+.installation .carte{text-align:left;max-width:26em;margin:0 auto 14px}
+.alerte-safari{display:block;width:100%;text-align:left;border:0;background:var(--or-c);color:var(--sur-or-c);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:.88rem;line-height:1.35}
