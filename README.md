@@ -14,6 +14,7 @@ Disponible gratuitement sur **Android** et **Windows**. Sans compte, sans inscri
 |---|---|---|
 | 📱 **Android** | [`PetanqueManager.apk`](https://github.com/Rilleycorps/petanque-manager/releases/latest/download/PetanqueManager.apk) | Ouvrir le fichier, autoriser l'installation depuis cette source si Android le demande. |
 | 💻 **Windows** | [`PetanqueManager-windows.zip`](https://github.com/Rilleycorps/petanque-manager/releases/latest/download/PetanqueManager-windows.zip) | Décompresser le zip n'importe où (Bureau, Documents, clé USB), puis double-cliquer sur `PetanqueManager.exe`. Aucune installation, Java est inclus. |
+| 🍏 **iPhone / iPad** | [Version web](https://rilleycorps.github.io/Petanque-Manager/app/) | Ouvrir dans Safari, toucher **Partager** puis **« Sur l'écran d'accueil »**. Fonctionne aussi sans réseau, et dans n'importe quel navigateur (Android, ordinateur). |
 
 > Toutes les versions sont dans l'onglet [**Releases**](https://github.com/Rilleycorps/petanque-manager/releases).
 

@@ -1,0 +1,19 @@
+{
+  "name": "Pétanque Manager",
+  "short_name": "Pétanque",
+  "description": "Organise tes concours de pétanque : tirage au sort, poules, tableaux, mêlée et classements.",
+  "lang": "fr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f6f1",
+  "theme_color": "#1e6b4e",
+  "categories": ["sports", "utilities"],
+  "icons": [
+    { "src": "icones/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icones/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
